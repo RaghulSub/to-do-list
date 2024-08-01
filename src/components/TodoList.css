@@ -1,0 +1,10 @@
+#TaskField {
+  width: 15rem;
+  height: 2rem;
+  padding: 0px;
+  border-style: none;
+}
+input[type="submit"] {
+  height: 2rem;
+  border-radius: 0px;
+}
