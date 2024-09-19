@@ -1,11 +1,16 @@
 import ToDoModel from "./models/models";
 import express from 'express';
-import routes from './routes/routes'
+import routes from './routes/routes';
+import cors from 'cors';
+import bodyParser from 'body-parser';
 
 const app = express();
-const PORT = 8000;
+const PORT = 5000;
 
-app.use('/ToDo',routes)
+app.use(cors());
+app.use(bodyParser.json());
+
+app.use('/ToDo',routes);
 
 ToDoModel.sync()
 .then(()=>{
