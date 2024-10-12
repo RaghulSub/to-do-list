@@ -1,24 +1,9 @@
 import React, { useState } from "react";
 import "./TodoList.css";
-import axios from 'axios';
 
-function whenSubmited(addTask, taskVal) {
-  let url = 'http://localhost:5000/ToDo/InsertToDo'; // Ensure this URL points to your backend
-  axios.post(url, {
-    description: taskVal,
-    title: "Default",
-  })
-  .then((response) => {
-    console.log(response.data); // Handle success response
-  })
-  .catch((err) => {
-    console.log(err); // Handle error response
-  });
 
-  addTask(taskVal); // Call the function to update the task list
-}
 
-function TodoList(props) {
+function TodoList({whenSubmited}) {
   const [val, setVal] = useState(""); // State to manage task input
 
   return (
@@ -27,7 +12,7 @@ function TodoList(props) {
       onSubmit={(event) => {
         event.preventDefault();
         if (val.trim() === "") return; // Prevent empty submissions
-        whenSubmited(props.addTask, val);
+        whenSubmited(val);
         setVal(""); // Clear input field after submission
       }}
     >

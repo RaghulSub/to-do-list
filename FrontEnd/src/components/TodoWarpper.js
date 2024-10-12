@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import TodoList from "./TodoList";
@@ -10,34 +10,81 @@ uuidv4();
 
 function TodoWarpper() {
   const [tasks, setTasks] = useState([]);
-  let url =  "http://localhost:5000/ToDo/GetToDo";
-  const res = axios.get(url);
-  console.log(res.data);
+  const [trigger,setTrigger] = useState(true);
+  
 
-  const addTask = (newToDo) => {
-    setTasks([...tasks, { id: uuidv4(), task: newToDo, completed: false }]);
-  };
+  useEffect(()=>{                    // used to refresh tasks after every operations
+    const fetchData = async () =>{
+      try{
+        let url =  "http://localhost:5000/ToDo/GetToDo";
+        const res = await axios.get(url);
+        console.log('Fetch:',res);
+        setTasks(res.data);
+      }catch(error){
+        console.log("Error while fetching data",error);
+      }
+    }
+    fetchData();
+  },[trigger])
+
+
+  const whenSubmited = (taskVal) => {
+
+    let url = 'http://localhost:5000/ToDo/InsertToDo';
+    axios.post(url, {
+      id:uuidv4(),
+      description: taskVal,
+      title: "Default",
+    })
+    .then((response) => {
+      // const res = response.data;
+      console.log(response.data); // Handle success response
+      setTrigger(!trigger);  // Call the function to trigger useEffect in TodoWarpper
+    })
+    .catch((err) => {
+      console.log(err); // Handle error response
+    });
+  }
 
   const toggleCompleted = (id) => {
-    setTasks(
-      tasks.map((task) => {
-        if (task.id === id) {
-          return { ...task, completed: !task.completed };
-        }
-        return task;
-      })
-    );
-  };
+    let url = 'http://localhost:5000/ToDo/UpdateToDo';
+    axios.put(url,{
+      id:id,
+      date:new Date(),
+    })
+    .then((response) => {
+      const res = response.data;
+      if(res.success){
+        setTrigger(!trigger);  // trigger the change to useEffect 
+      }
+    })
+    .catch((err)=>{
+      console.log(err);
+    })
+  }
 
   const deleteTask = (id) => {
-    setTasks(tasks.filter((task) => task.id !== id));
-  };
+    console.log(id);
+    const url = 'http://localhost:5000/ToDo/DeleteToDo';
+    axios.delete(url,{
+      data:{id:id},
+    })
+    .then((response)=>{
+      const res = response.data;
+      if(res.success){
+        setTrigger(!trigger);  // trigger the change to useEffect
+      }
+    })
+    .catch((err)=>{
+      console.log("error:",err);
+    });
+  }
 
   return (
     <div className="TodoWarpper">
-      <TodoList addTask={addTask} />
+      <TodoList whenSubmited={whenSubmited} />
 
-      {tasks.map((task, index) => {
+      {tasks && tasks.map((task, index) => {
         return (
           <Tasks
             task={task}
