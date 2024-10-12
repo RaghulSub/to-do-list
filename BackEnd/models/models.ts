@@ -2,7 +2,7 @@ import { Model, DataTypes } from "sequelize";
 import sequelize from "../database/config";
 
 class ToDoModel extends Model {
-  public id!: number;
+  public id!: string;
   public title!: string;
   public description!: string;
   public completed!: boolean;
@@ -13,9 +13,8 @@ class ToDoModel extends Model {
 ToDoModel.init(
   {
     id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       primaryKey: true,
-      autoIncrement: true,
     },
     title: DataTypes.STRING,
     description: DataTypes.TEXT,
