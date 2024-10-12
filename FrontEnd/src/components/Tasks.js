@@ -12,7 +12,7 @@ function Tasks({ task, toggleCompleted, deleteTask }) {
         }}
       />
       <label className={task.completed ? "TaskCompleted" : "TaskNotCompleted"}>
-        {task.task}
+        {task.description}
       </label>
       <i
         className="material-icons"
