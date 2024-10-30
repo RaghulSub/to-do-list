@@ -1,7 +1,7 @@
-import express from 'express';
+import {Router} from 'express';
 import { InsertToDo,GetToDo,UpdateToDo,DeleteToDo } from '../controller/todoController';
 
-const app = express()
+const app = Router()
 
 app.post('/InsertToDo',InsertToDo);
 
