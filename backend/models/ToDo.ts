@@ -8,6 +8,8 @@ class ToDoModel extends Model {
   public completed!: boolean;
   public createdAt!: Date;
   public updatedAt!: Date;
+  public deletedAt!: Date;
+  public userId!: string;
 }
 
 ToDoModel.init(
@@ -21,10 +23,14 @@ ToDoModel.init(
     completed: DataTypes.BOOLEAN,
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
+    deletedAt: DataTypes.DATE,
+    userId: DataTypes.STRING,
   },
   {
     sequelize,
     modelName: "Todo",
+    timestamps: true,
+    paranoid: true,
   }
 );
 
